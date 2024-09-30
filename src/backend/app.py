@@ -1,49 +1,56 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 import openai
 from flask_cors import CORS
+from dotenv import load_dotenv
+import os
+from datetime import timedelta
 
-# Initialize Flask app and enable CORS
+
+load_dotenv()
+
 app = Flask(__name__)
-CORS(app)  # Optional: Enables CORS support to avoid cross-origin issues
+CORS(app)
 
-# Set up OpenAI API key (Replace with your own API key)
-openai.api_key = "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"
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# Store conversation history in memory
-conversation_history = [
-    {"role": "system", "content": "You are a helpful French learning assistant."}
-]
+app.secret_key = os.getenv("FLASK_SECRET_KEY")
 
-# Health check endpoint
+app.permanent_session_lifetime = timedelta(minutes=30)
+
 @app.route('/health', methods=['GET'])
 def health_check():
     return jsonify({"status": "OK"}), 200
 
-# Chat endpoint to handle messages
 @app.route('/chat', methods=['POST'])
 def chat():
-    user_input = request.json.get('message')  # Extract the user message from the request
-    print(f"User Input: {user_input}")  # Log user input for debugging
+    user_input = request.json.get('message')  
+    print(f"User Input: {user_input}") 
 
-    # Append the user message to the conversation history
-    conversation_history.append({"role": "user", "content": user_input})
+    if 'conversation_history' not in session:
+        session['conversation_history'] = [
+            {"role": "system", "content": "You are a helpful French learning assistant."}
+        ]
 
-    # OpenAI API call using the updated model with conversation context
+    session['conversation_history'].append({"role": "user", "content": user_input})
+
     try:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            messages=conversation_history  # Send the entire conversation history
+            messages=session['conversation_history']
         )
-        print(f"OpenAI Response: {response}")  # Log the full OpenAI response
-        message = response['choices'][0]['message']['content'].strip()  # Extract and format the response
-
-        # Append the AI's response to the conversation history
-        conversation_history.append({"role": "assistant", "content": message})
+        print(f"OpenAI Response: {response}")
+        message = response['choices'][0]['message']['content'].strip()
+        session['conversation_history'].append({"role": "assistant", "content": message})
     except Exception as e:
         print(f"Error calling OpenAI API: {e}")
         message = "Error: Unable to generate a response from the AI."
 
     return jsonify({"response": message}), 200
+
+@app.route('/clear', methods=['POST'])
+def clear_history():
+    session.pop('conversation_history', None)
+    return jsonify({"status": "Conversation history cleared."}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)

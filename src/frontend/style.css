@@ -28,27 +28,39 @@ body {
 #messages {
     list-style-type: none;
     padding: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .message {
     margin: 10px 0;
     padding: 12px;
     border-radius: 12px;
-    width: fit-content;
     max-width: 70%;
+    display: inline-block;
 }
 
 .user {
     background: #daf7dc;
-    align-self: flex-end;
+    align-self: flex-end; 
+    text-align: right;  
 }
 
 .bot {
     background: #e0e7ff;
+    align-self: flex-start; 
+    text-align: left;  
+}
+
+#input-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;  
 }
 
 #user_input {
-    width: 80%;
+    flex: 1;  
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -56,22 +68,25 @@ body {
 }
 
 #send_button {
-    width: 18%;
     padding: 10px;
     background: #007bff;
     border: none;
     border-radius: 8px;
     color: #fff;
     cursor: pointer;
-    margin-left: 10px;
+    text-align: center;  
 }
 
 #send_button:hover {
     background: #0056b3;
 }
 
-/* Style for the Typing Indicator */
 .typing-indicator {
     font-style: italic;
     color: #888;
+}
+
+.center-container {
+    display: flex;
+    justify-content: center;
 }
