@@ -1,16 +1,18 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f2f5;
+    background: url('french-background.jpg') no-repeat center center fixed; 
+    background-size: cover;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    margin: 0;
 }
 
 .container {
     width: 600px;
     padding: 20px;
-    background: #fff;
+    background: rgba(255, 255, 255, 0.8); 
     border-radius: 12px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
@@ -42,29 +44,35 @@ body {
 
 .user {
     background: #daf7dc;
-    align-self: flex-end; 
-    text-align: right;  
+    align-self: flex-end;
+    text-align: right;
 }
 
 .bot {
     background: #e0e7ff;
-    align-self: flex-start; 
-    text-align: left;  
+    align-self: flex-start;
+    text-align: left;
 }
 
 #input-container {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    gap: 10px;  
+    align-items: flex-start;
+    gap: 10px;
 }
 
 #user_input {
-    flex: 1;  
+    flex: 1;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+#button-container {
+    display: flex;
+    flex-direction: column;  
+    gap: 10px;  
 }
 
 #send_button {
@@ -74,19 +82,34 @@ body {
     border-radius: 8px;
     color: #fff;
     cursor: pointer;
-    text-align: center;  
+    text-align: center;
 }
 
 #send_button:hover {
     background: #0056b3;
 }
 
+#clear_button {
+    padding: 10px;
+    background: #ff4d4d;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    text-align: center;
+}
+
+#clear_button:hover {
+    background: #e60000;
+}
+
+.privacy-disclaimer {
+    font-size: 12px;
+    color: #888;
+    margin-top: 10px;
+}
+
 .typing-indicator {
     font-style: italic;
     color: #888;
-}
-
-.center-container {
-    display: flex;
-    justify-content: center;
 }

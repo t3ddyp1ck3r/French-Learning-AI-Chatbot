@@ -1,6 +1,7 @@
 function sendMessage() {
     const userInput = document.getElementById("user_input").value;
     if (userInput.trim() === "") return;  
+
     const messageContainer = document.getElementById("messages");
     const userMessage = document.createElement("div");
     userMessage.classList.add("message", "user");
@@ -47,7 +48,7 @@ function sendMessage() {
     })
     .catch(error => {
         console.error("Error occurred during fetch:", error);
-        
+
         const typingIndicator = document.getElementById("typing-indicator");
         if (typingIndicator) {
             typingIndicator.remove();
@@ -68,4 +69,19 @@ document.getElementById("user_input").addEventListener("keypress", function (e) 
     if (e.key === "Enter") {  
         sendMessage();
     }
+});
+
+document.getElementById("clear_button").addEventListener("click", () => {
+    fetch("http://127.0.0.1:5000/clear", {
+        method: "POST"
+    })
+    .then(response => {
+        if (response.ok) {
+            document.getElementById("messages").innerHTML = "";  
+            console.log("Chat history cleared successfully.");
+        } else {
+            console.error("Failed to clear chat history.");
+        }
+    })
+    .catch(error => console.error("Error occurred while clearing chat history:", error));
 });
