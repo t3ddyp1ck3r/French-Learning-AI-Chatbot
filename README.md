@@ -29,7 +29,7 @@ To run this project on your local machine, follow the steps below:
 2. Setting Up the Project
 
 1.Clone the Repository:
-git clone https://github.com/yourusername/french-learning-chatbot.git
+git clone https://github.com/t3ddyp1ck3r/french-learning-chatbot.git
 cd french-learning-chatbot
 
 2.Create a .env File in the root directory:
@@ -70,9 +70,6 @@ Project Files
 
 ## Project Demo
 Provided a video of the project
-
-## Contributors
-Grant Ivan ANDALAJAO - t3ddyp1ck3r
 
 ## Final Checklist
 Replace the placeholders (yourusername, your_openai_api_key, etc.) with actual values.
