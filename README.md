@@ -1,5 +1,6 @@
 ## French Learning Chatbot
-Project Description
+
+## Project Description
 The French Learning Chatbot is an interactive tool designed to help users practice French through natural and dynamic conversations. Leveraging OpenAI's GPT-3.5-turbo model, this chatbot provides real-time responses, maintaining context to simulate realistic dialogues. With features like a context-aware memory and session-clearing options, it offers an engaging way to learn French compared to traditional language-learning platforms.
 
 ## Project Structure

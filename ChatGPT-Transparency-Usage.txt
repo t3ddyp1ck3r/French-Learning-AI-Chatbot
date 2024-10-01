@@ -1,7 +1,5 @@
 ChatGPT Usage:
-
 -used to generated all the Documentations of the project
-
 -used to generat the README.md file
 
 
