@@ -30,6 +30,7 @@ To run this project on your local machine, follow the steps below:
 
 1.Clone the Repository:
 git clone https://github.com/t3ddyp1ck3r/french-learning-chatbot.git
+
 cd french-learning-chatbot
 
 2.Create a .env File in the root directory:
