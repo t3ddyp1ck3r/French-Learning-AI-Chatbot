@@ -71,13 +71,5 @@ Project Files
 ## Project Demo
 Provided a video of the project
 
-<<<<<<< HEAD
-## Contributors
-Grant Ivan ANDALAJAO - t3ddyp1ck3r
-
 ## Final Checklist
 Replace the placeholders (yourusername, your_openai_api_key, etc.) with actual values.
-=======
-## Final Checklist
-Replace the placeholders (yourusername, your_openai_api_key, etc.) with actual values.
->>>>>>> 19cba4451a4ced929d00a89a714f2c17689c1a17
