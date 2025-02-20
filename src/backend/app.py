@@ -71,11 +71,41 @@ def login():
     return jsonify({"message": "Login successful", "token": token}), 200
 
 # Chat Route with JWT Authentication
+from flask_jwt_extended import jwt_required, get_jwt_identity
+import openai
+
 @app.route('/chat', methods=['POST'])
-@jwt_required()
+@jwt_required()  # Ensures only authenticated users can chat
 def chat():
     username = get_jwt_identity()  # Get logged-in user
-    return jsonify({"message": f"Hello, {username}! Your chatbot is now secured!"})
+    user_input = request.json.get('message')
+
+    if not user_input:
+        return jsonify({"error": "No message provided"}), 400
+
+    # Ensure session stores conversation history
+    if 'conversation_history' not in session:
+        session['conversation_history'] = [
+            {"role": "system", "content": "You are a helpful AI assistant helping users learn French."}
+        ]
+    # Append user message to conversation history
+    session['conversation_history'].append({"role": "user", "content": user_input})
+
+    try:
+        # Make request to OpenAI API
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=session['conversation_history']
+        )
+        # Extract AI response
+        message = response['choices'][0]['message']['content'].strip()
+        session['conversation_history'].append({"role": "assistant", "content": message})
+
+    except Exception as e:
+        print(f"Error calling OpenAI API: {e}")
+        message = "Error: Unable to generate a response from the AI."
+
+    return jsonify({"response": message}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)

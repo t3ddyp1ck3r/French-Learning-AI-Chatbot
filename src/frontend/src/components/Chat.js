@@ -1,15 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/chat.css";
 
 const Chat = () => {
     const [messages, setMessages] = useState([]);
     const [userInput, setUserInput] = useState("");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("You must log in first!");
+            navigate("/");
+        }
+    }, [navigate]);
 
     const sendMessage = async () => {
         if (!userInput.trim()) return;
 
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Session expired. Please log in again.");
+            navigate("/");
+            return;
+        }
         // Add user's message to state
-        setMessages([...messages, { role: "user", content: userInput }]);
+        setMessages(prev => [...prev, { role: "user", content: userInput }]);
         setUserInput("");
 
         // Add typing indicator
@@ -18,16 +34,26 @@ const Chat = () => {
         try {
             const response = await fetch("http://127.0.0.1:5000/chat", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify({ message: userInput }),
             });
 
-            if (!response.ok) throw new Error("Network response error");
+            if (response.status === 401) {
+                alert("Session expired. Please log in again.");
+                localStorage.removeItem("token");
+                navigate("/");
+                return;
+            }
+
+            if (!response.ok) throw new Error("Network error");
 
             const data = await response.json();
 
             setMessages(prev => [
-                ...prev.slice(0, -1), // Remove typing indicator
+                ...prev.slice(0, -1), 
                 { role: "bot", content: data.response }
             ]);
 
@@ -40,17 +66,34 @@ const Chat = () => {
     };
 
     const clearChat = async () => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Session expired. Please log in again.");
+            navigate("/");
+            return;
+        }
+
         try {
-            await fetch("http://127.0.0.1:5000/clear", { method: "POST" });
+            await fetch("http://127.0.0.1:5000/clear", {
+                method: "POST",
+                headers: { "Authorization": `Bearer ${token}` }
+            });
             setMessages([]);
         } catch (error) {
             console.error("Failed to clear chat history.");
         }
     };
 
+    const logout = () => {
+        localStorage.removeItem("token");
+        navigate("/");
+    };
+
     return (
         <div className="container">
             <h1>French Learning Chatbot</h1>
+            <button className="logout-button" onClick={logout}>Logout</button>
+
             <div id="chatbox">
                 <div id="messages">
                     {messages.map((msg, index) => (
