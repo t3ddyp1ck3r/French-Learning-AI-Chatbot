@@ -1,6 +1,5 @@
 body {
     font-family: Arial, sans-serif;
-    background: url('french-background.jpg') no-repeat center center fixed; 
     background-size: cover;
     display: flex;
     justify-content: center;
@@ -10,23 +9,25 @@ body {
 }
 
 .container {
-    width: 600px;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.8); 
+    width: 750px; 
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.85);
     border-radius: 12px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
+/* Chatbox */
 #chatbox {
-    height: 400px;
+    height: 500px; 
     border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 10px;
-    overflow-y: scroll;
+    padding: 15px;
+    overflow-y: auto;
     margin-bottom: 20px;
     background-color: #fafafa;
 }
 
+/* Messages */
 #messages {
     list-style-type: none;
     padding: 0;
@@ -36,79 +37,90 @@ body {
 
 .message {
     margin: 10px 0;
-    padding: 12px;
+    padding: 14px;
     border-radius: 12px;
-    max-width: 70%;
-    display: inline-block;
+    max-width: 75%;
+    font-size: 15px;
 }
 
+/* User Messages */
 .user {
     background: #daf7dc;
     align-self: flex-end;
     text-align: right;
 }
 
+/* Bot Messages */
 .bot {
     background: #e0e7ff;
     align-self: flex-start;
     text-align: left;
 }
 
+/* Input Section */
 #input-container {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    gap: 10px;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
 }
 
 #user_input {
     flex: 1;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #ddd;
     border-radius: 8px;
+    font-size: 14px;
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
+/* Button Section */
 #button-container {
     display: flex;
-    flex-direction: column;  
-    gap: 10px;  
+    flex-direction: column;
+    gap: 12px;
 }
 
-#send_button {
-    padding: 10px;
-    background: #007bff;
+/* Send & Clear Buttons */
+#send_button, #clear_button {
+    padding: 12px;
+    width: 110px;
     border: none;
     border-radius: 8px;
     color: #fff;
     cursor: pointer;
     text-align: center;
+    font-weight: bold;
+}
+
+/* Send Button */
+#send_button {
+    background: #007bff;
 }
 
 #send_button:hover {
     background: #0056b3;
 }
 
+/* Clear Button */
 #clear_button {
-    padding: 10px;
     background: #ff4d4d;
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    cursor: pointer;
-    text-align: center;
 }
 
 #clear_button:hover {
     background: #e60000;
 }
 
+/* Privacy Disclaimer */
 .privacy-disclaimer {
-    font-size: 12px;
-    color: #888;
+    font-size: 13px;
+    color: #0c0c0c;
     margin-top: 10px;
+    text-align: center;
 }
 
+/* Typing Indicator */
 .typing-indicator {
     font-style: italic;
     color: #888;
