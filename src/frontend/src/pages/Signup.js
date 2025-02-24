@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../styles/auth.css";  // New CSS file for authentication pages
+import "../styles/auth.css";  // Ensure this is imported
 
 const Signup = () => {
     const [username, setUsername] = useState("");

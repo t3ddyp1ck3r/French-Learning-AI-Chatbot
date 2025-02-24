@@ -1,34 +1,62 @@
-.auth-container {
-    max-width: 350px;
-    margin: 100px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
+/* Background styling */
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #4facfe, #00f2fe);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
 }
 
+/* Centered form container */
+.auth-container {
+    max-width: 400px;
+    width: 100%;
+    padding: 25px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Title styling */
 .auth-container h2 {
     margin-bottom: 20px;
     color: #333;
+    font-weight: bold;
 }
 
+/* Input fields */
 .auth-container input {
     width: 90%;
-    padding: 10px;
+    padding: 12px;
     margin: 10px 0;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 8px;
+    font-size: 14px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
 }
 
+.auth-container input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+}
+
+/* Buttons */
 .auth-container button {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     background: #007bff;
     border: none;
-    border-radius: 5px;
-    color: #fff;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
     cursor: pointer;
+    transition: 0.3s;
     margin-top: 10px;
 }
 
@@ -36,6 +64,7 @@
     background: #0056b3;
 }
 
+/* Switch between Login & Signup */
 .switch-button {
     background: none;
     color: #007bff;
@@ -43,8 +72,28 @@
     cursor: pointer;
     font-size: 14px;
     margin-top: 10px;
+    transition: 0.3s;
 }
 
 .switch-button:hover {
     text-decoration: underline;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Welcome message */
+.welcome-text {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 20px;
 }
