@@ -24,11 +24,10 @@ const Chat = () => {
             navigate("/");
             return;
         }
-        // Add user's message to state
+
         setMessages(prev => [...prev, { role: "user", content: userInput }]);
         setUserInput("");
 
-        // Add typing indicator
         setMessages(prev => [...prev, { role: "bot", content: "Typing..." }]);
 
         try {
@@ -53,7 +52,7 @@ const Chat = () => {
             const data = await response.json();
 
             setMessages(prev => [
-                ...prev.slice(0, -1), 
+                ...prev.slice(0, -1),
                 { role: "bot", content: data.response }
             ]);
 
@@ -91,8 +90,11 @@ const Chat = () => {
 
     return (
         <div className="container">
-            <h1>French Learning Chatbot</h1>
-            <button className="logout-button" onClick={logout}>Logout</button>
+            {/* New header section for chatbot title & logout button */}
+            <div className="chat-header">
+                <h1>French Learning Chatbot</h1>
+                <button className="logout-button" onClick={logout}>Logout</button>
+            </div>
 
             <div id="chatbox">
                 <div id="messages">
