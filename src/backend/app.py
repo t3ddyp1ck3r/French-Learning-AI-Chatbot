@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify
 import openai
 from flask_cors import CORS
 from flask_pymongo import PyMongo
@@ -6,7 +6,6 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from dotenv import load_dotenv
 import os
-from datetime import timedelta
 
 load_dotenv()
 
@@ -23,14 +22,20 @@ bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
-app.secret_key = os.getenv("FLASK_SECRET_KEY")
-app.permanent_session_lifetime = timedelta(minutes=30)
+
+# Fetch user chat history from MongoDB
+def get_chat_history(username):
+    user_data = mongo.db.users.find_one({"username": username})
+    return user_data.get("chat_history", []) if user_data else []
+
+# Save chat history to MongoDB
+def save_chat_history(username, history):
+    mongo.db.users.update_one({"username": username}, {"$set": {"chat_history": history}}, upsert=True)
 
 # Home Route to Check MongoDB Connection
 @app.route('/', methods=['GET'])
 def home():
     try:
-        # Test MongoDB Connection
         mongo.db.users.find_one()
         mongo_status = "Connected"
     except Exception as e:
@@ -70,42 +75,61 @@ def login():
     token = create_access_token(identity=username)
     return jsonify({"message": "Login successful", "token": token}), 200
 
-# Chat Route with JWT Authentication
-from flask_jwt_extended import jwt_required, get_jwt_identity
-import openai
-
+# Chat Route (Supports Language Switching & Saves History)
 @app.route('/chat', methods=['POST'])
-@jwt_required()  # Ensures only authenticated users can chat
+@jwt_required()
 def chat():
-    username = get_jwt_identity()  # Get logged-in user
-    user_input = request.json.get('message')
+    username = get_jwt_identity()
+    data = request.json
+    user_input = data.get('message')
+    language = data.get('language', 'French')  # Default to French
 
     if not user_input:
         return jsonify({"error": "No message provided"}), 400
 
-    # Ensure session stores conversation history
-    if 'conversation_history' not in session:
-        session['conversation_history'] = [
-            {"role": "system", "content": "You are a helpful AI assistant helping users learn French."}
-        ]
-    # Append user message to conversation history
-    session['conversation_history'].append({"role": "user", "content": user_input})
+    chat_history = get_chat_history(username)
+
+    # Adjust AI behavior based on language preference
+    system_prompt = "You are a helpful AI assistant that helps users learn French."
+    if language == "English":
+        system_prompt = "You are a helpful AI assistant that provides English translations and explanations."
+
+    # Add user input to chat history
+    chat_history.append({"role": "user", "content": user_input})
 
     try:
-        # Make request to OpenAI API
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            messages=session['conversation_history']
+            messages=[{"role": "system", "content": system_prompt}] + chat_history
         )
-        # Extract AI response
+
         message = response['choices'][0]['message']['content'].strip()
-        session['conversation_history'].append({"role": "assistant", "content": message})
+        chat_history.append({"role": "assistant", "content": message})
+
+        # Save updated chat history to MongoDB
+        save_chat_history(username, chat_history)
 
     except Exception as e:
         print(f"Error calling OpenAI API: {e}")
         message = "Error: Unable to generate a response from the AI."
 
     return jsonify({"response": message}), 200
+
+# Route to Get Chat History
+@app.route('/history', methods=['GET'])
+@jwt_required()
+def get_history():
+    username = get_jwt_identity()
+    chat_history = get_chat_history(username)
+    return jsonify({"history": chat_history}), 200
+
+# Route to Clear Chat History
+@app.route('/clear', methods=['POST'])
+@jwt_required()
+def clear_history():
+    username = get_jwt_identity()
+    save_chat_history(username, [])  # Clear stored history
+    return jsonify({"status": "Conversation history cleared."}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
